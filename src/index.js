@@ -94,6 +94,41 @@ app.get("/libros/:id", async (req,res)=>{
         res.status(500).send("Error al buscar el libro", error);
     }
 })
+/*************ACTUALIZA UN LIBRO POR SU ID **********************/
+app.put("/libros/:id", async (req, res) => {
+    try {
+      const libro = await Libro.findByIdAndUpdate(req.params.id,
+        {
+          titulo: req.body.titulo,
+          autor: req.body.autor,
+        },
+        { new: true } // Esta opción hará que se devuelva el documento actualizado
+      );
+
+      if (libro) {
+        res.json(libro);
+      } else {
+        res.status(400).send("Libro no encontrado");
+      }
+    } catch (error) {
+      res.status(500).send("Error al actualizar el libro");
+    }
+  });
+  /*************ELIMINA UN LIBRO POR SU ID **********************/
+  app.delete("/libros/:id", async (req, res) => {
+    try {
+      const libro = await Libro.findByIdAndRemove(req.params.id);
+      if (libro) {
+        res.status(204).send();
+      } else {
+        res.status(404).send("Libro no encontrado");
+      }
+    } catch (error) {
+      res.status(500).send("Error al eliminar el libro");
+    }
+  });
+
+
 
 /*****minwork ** CLAVE DE AUTORIZACION**/
 app.use((req,res,next)=>{
